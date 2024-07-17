@@ -12,6 +12,10 @@ export const GET = async () => {
         pathPattern: "/",
         apiPath: "/api/action",
       },
+      {
+        pathPattern: "www.solandy.dev",
+        apiPath: "/api/action",
+      },
     ],
   };
 
