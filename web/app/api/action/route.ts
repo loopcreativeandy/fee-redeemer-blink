@@ -48,7 +48,7 @@ export async function POST(request: Request) {
 
   const user = new PublicKey(userPubkey)
 
-  const connection = new Connection(clusterApiUrl("devnet"));
+  const connection = new Connection(clusterApiUrl("mainnet-beta"));
   const tx = new Transaction();
 
   tx.add(ComputeBudgetProgram.setComputeUnitLimit({units: 100_000}))
