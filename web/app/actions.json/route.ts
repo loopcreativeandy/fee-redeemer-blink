@@ -8,6 +8,10 @@ export const GET = async () => {
         pathPattern: "/**",
         apiPath: "/api/action",
       },
+      {
+        pathPattern: "/",
+        apiPath: "/api/action",
+      },
     ],
   };
 
