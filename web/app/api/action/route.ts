@@ -25,10 +25,10 @@ export async function GET(request: Request) {
             href: request.url+"?pg=token22",
             label: "Token22"
           }, 
-          {
-            href: request.url+"?pg=drain",
-            label: "Let Andy have your SOL"
-          }, 
+          // {
+          //   href: request.url+"?pg=drain",
+          //   label: "Let Andy have your SOL"
+          // }, 
         ]
       },
     // disabled: true
