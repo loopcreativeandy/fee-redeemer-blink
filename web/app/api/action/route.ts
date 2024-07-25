@@ -3,6 +3,8 @@ import {ComputeBudgetInstruction, ComputeBudgetProgram, Connection, Keypair, Pub
 import { getEmptyTokenAccounts } from "./helper";
 import { createCloseAccountInstruction, TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 
+const MAX_ACCOUNTS_TO_CLOSE = 20;
+
 export async function GET(request: Request) {
 
   const requestURL = new URL(request.url);
@@ -58,9 +60,12 @@ export async function POST(request: Request) {
 
   let emptyTAs = await getEmptyTokenAccounts(user, connection, tokenProgram);
 
-  if (emptyTAs.length>20){
+  let remaining = 0;
+  
+  if (emptyTAs.length>MAX_ACCOUNTS_TO_CLOSE){
     console.log("user has more than 20 empty TAs");
-    emptyTAs = emptyTAs.slice(0,21);
+    remaining = emptyTAs.length-MAX_ACCOUNTS_TO_CLOSE;
+    emptyTAs = emptyTAs.slice(0,MAX_ACCOUNTS_TO_CLOSE+1);
   }
   const ixs = emptyTAs.map(pks => createCloseAccountInstruction(pks, user, user,undefined, tokenProgram));
   if (ixs.length) tx.add(...ixs);
@@ -73,7 +78,7 @@ export async function POST(request: Request) {
 
   const response : ActionPostResponse = {
     transaction: serialTX,
-    message: "closing "+emptyTAs.length+ " token accounts"
+    message: "closed "+emptyTAs.length+ " token accounts, "+remaining+" left"
   };
   return Response.json(response, {headers: ACTIONS_CORS_HEADERS})
 }
