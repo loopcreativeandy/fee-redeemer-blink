@@ -4,16 +4,12 @@ export const GET = async () => {
   const payload: ActionsJson = {
     rules: [
       // map all root level routes to an action
-      {
-        pathPattern: "/**",
-        apiPath: "/api/action",
-      },
+      // {
+      //   pathPattern: "/**",
+      //   apiPath: "/api/action",
+      // },
       {
         pathPattern: "/",
-        apiPath: "/api/action",
-      },
-      {
-        pathPattern: "www.solandy.dev",
         apiPath: "/api/action",
       },
     ],
